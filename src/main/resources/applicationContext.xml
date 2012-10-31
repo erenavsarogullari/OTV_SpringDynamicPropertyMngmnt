@@ -1,0 +1,47 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Beans Declaration -->
+	<!-- Core Dynamic Properties Bean Declaration -->
+	<bean id="CoreDynamicPropertiesBean" class="org.springframework.beans.factory.config.PropertiesFactoryBean" scope="prototype">
+		<property name="location" value="classpath:DynamicPropertiesFile.properties" /> 
+  	</bean>
+	<!-- Dynamic Properties Map Declaration -->
+	<bean id="DynamicPropertiesMap" class="java.util.HashMap"/>
+	
+	<!-- Dynamic Properties File Reader Task Declaration -->
+	<bean id="DynamicPropertiesFileReaderTask" class="com.otv.dynamic.properties.task.DynamicPropertiesFileReaderTask">
+		<property name="dynamicPropertiesMap"   ref="DynamicPropertiesMap"/>
+	</bean>	
+	<!-- End of Beans Declaration -->
+	
+	<!-- Scheduler Configuration -->
+	<!-- Job Detail-->
+	<bean id="DynamicPropertiesFileReaderTaskJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+		<property name="targetObject" ref="DynamicPropertiesFileReaderTask" />
+		<property name="targetMethod" value="start" />	 
+	</bean>
+	
+	<!-- Simple Trigger -->
+	<bean id="DynamicPropertiesFileReaderTaskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean"> 
+		<property name="jobDetail" ref="DynamicPropertiesFileReaderTaskJobDetail" />
+		<property name="repeatInterval" value="60000" />
+		<property name="startDelay" value="0" /> 
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+		   <list>
+		      <ref bean="DynamicPropertiesFileReaderTaskJobDetail" />
+		   </list>
+		</property>	 
+		<property name="triggers">
+		   <list>
+			  <ref bean="DynamicPropertiesFileReaderTaskTrigger" />	
+		   </list>
+		</property>
+	</bean>
+	<!-- End of Scheduler Configuration -->
+</beans>
