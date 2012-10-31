@@ -8,7 +8,4 @@ This project shows Dynamic Property Management in Spring.
 
 Used Technologies :
 
-JDK 1.6.0_31
-Spring 3.1.1
-Quartz 1.8.5
-Maven 3.0.2
+JDK 1.6.0_31, Spring 3.1.1, Quartz 1.8.5 and Maven 3.0.2
